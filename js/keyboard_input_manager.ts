@@ -1,63 +1,78 @@
 /// <reference path="game_manager.ts"/>
-var keyboardMap = {
-    38: 0 /* Up */,
-    39: 1 /* Right */,
-    40: 2 /* Down */,
-    37: 3 /* Left */,
-    75: 0 /* Up */,
-    76: 1 /* Right */,
-    74: 2 /* Down */,
-    72: 3 /* Left */,
-    87: 0 /* Up */,
-    68: 1 /* Right */,
-    83: 2 /* Down */,
-    65: 3 /* Left */ // A
+
+let keyboardMap = {
+    38: Direction.Up, // Up
+    39: Direction.Right, // Right
+    40: Direction.Down, // Down
+    37: Direction.Left, // Left
+    75: Direction.Up, // Vim up
+    76: Direction.Right, // Vim right
+    74: Direction.Down, // Vim down
+    72: Direction.Left, // Vim left
+    87: Direction.Up, // W
+    68: Direction.Right, // D
+    83: Direction.Down, // S
+    65: Direction.Left  // A
 };
+
 // R key restarts the game
-var restartKeyStroke = 82;
-var Move = (function () {
-    function Move(direction) {
-        // constructor(public direction: Direction) {
+let restartKeyStroke = 82;
+
+class Move {
+    public direction: Direction;
+    constructor(direction: Direction) {
+    // constructor(public direction: Direction) {
         this.direction = direction;
     }
-    return Move;
-})();
-var Restart = (function () {
-    function Restart() {
-    }
-    return Restart;
-})();
-var KeepPlaying = (function () {
-    function KeepPlaying() {
-    }
-    return KeepPlaying;
-})();
-var TsKeyboardInputManager = (function () {
-    function TsKeyboardInputManager(boardEventHandler) {
+}
+
+class Restart {}
+
+class KeepPlaying {}
+
+// TODO: how can I use interfaces with unions? 
+// type Move = {move: boolean, direction: Direction};
+// type Restart = {restart: boolean};
+// type KeepPlaying = {keepPlaying: boolean}
+
+type BoardEvent = Move | Restart | KeepPlaying;
+
+class TsKeyboardInputManager {
+    boardEventHandler: (event: BoardEvent) => void;
+    eventTouchstart: string;
+    eventTouchmove: string;
+    eventTouchend: string;
+
+    constructor(boardEventHandler: (BoardEvent) => void) {
         this.boardEventHandler = boardEventHandler;
+        
         this.initEventNames();
         this.listen();
     }
-    TsKeyboardInputManager.prototype.initEventNames = function () {
+    
+    private initEventNames()  {
+        
         if (window.navigator.msPointerEnabled) {
             //Internet Explorer 10 style
             this.eventTouchstart = "MSPointerDown";
             this.eventTouchmove = "MSPointerMove";
             this.eventTouchend = "MSPointerUp";
-        }
-        else {
+            
+        } else {
             this.eventTouchstart = "touchstart";
             this.eventTouchmove = "touchmove";
             this.eventTouchend = "touchend";
         }
-    };
-    TsKeyboardInputManager.prototype.listen = function () {
+    }
+    
+    private listen() {
         var self = this;
         // Respond to direction keys
-        document.addEventListener("keydown", function (event) {
-            var modifiers = event.altKey || event.ctrlKey || event.metaKey ||
-                event.shiftKey;
-            var direction = keyboardMap[event.which];
+        document.addEventListener("keydown", function (event: KeyboardEvent) {
+            let modifiers = event.altKey || event.ctrlKey || event.metaKey ||
+                            event.shiftKey;
+            let direction: Direction = keyboardMap[event.which];
+    
             if (!modifiers) {
                 if (direction !== undefined) {
                     self.raiseMove(event, direction);
@@ -68,15 +83,18 @@ var TsKeyboardInputManager = (function () {
                 }
             }
         });
+    
         // Respond to button presses
         this.bindButtonPress(".retry-button", this.raiseRestart);
         this.bindButtonPress(".restart-button", this.raiseRestart);
         this.bindButtonPress(".keep-playing-button", this.raiseKeepPlaying);
+    
         // Respond to swipe events
         var touchStartClientX, touchStartClientY;
         var gameContainer = document.getElementsByClassName("game-container")[0];
+    
         // TODO: can't use Event for event argument, because all touch-stuff is not defined there!
-        gameContainer.addEventListener(this.eventTouchstart, function (event) {
+        gameContainer.addEventListener(this.eventTouchstart, function (event: any) {
             // TODO HINT: this is a touch interface!!! Awesome!
             // Switched to square brackets to remove squigglies from TypeScript!
             // It seems that some package is missing???
@@ -84,69 +102,76 @@ var TsKeyboardInputManager = (function () {
                 event.targetTouches > 1) {
                 return; // Ignore if touching with more than 1 finger
             }
+    
             if (window.navigator.msPointerEnabled) {
                 touchStartClientX = event.pageX;
                 touchStartClientY = event.pageY;
-            }
-            else {
+            } else {
                 touchStartClientX = event.touches[0].clientX;
                 touchStartClientY = event.touches[0].clientY;
             }
+    
             // TODO: was here! But dont think it needed!
             event.preventDefault();
         });
-        gameContainer.addEventListener(this.eventTouchmove, function (event) {
+    
+        gameContainer.addEventListener(this.eventTouchmove, function (event: Event) {
             event.preventDefault();
         });
-        gameContainer.addEventListener(this.eventTouchend, function (event) {
+    
+        gameContainer.addEventListener(this.eventTouchend, function (event: any) {
             if ((!window.navigator.msPointerEnabled && event.touches.length > 0) ||
                 event.targetTouches > 0) {
                 return; // Ignore if still touching with one or more fingers
             }
+    
             var touchEndClientX, touchEndClientY;
+    
             if (window.navigator.msPointerEnabled) {
                 touchEndClientX = event.pageX;
                 touchEndClientY = event.pageY;
-            }
-            else {
+            } else {
                 touchEndClientX = event.changedTouches[0].clientX;
                 touchEndClientY = event.changedTouches[0].clientY;
             }
+    
             var dx = touchEndClientX - touchStartClientX;
             var absDx = Math.abs(dx);
+    
             var dy = touchEndClientY - touchStartClientY;
             var absDy = Math.abs(dy);
+    
             if (Math.max(absDx, absDy) > 10) {
                 // (right : left) : (down : up)
-                var direction = absDx > absDy ? (dx > 0 ? 1 /* Right */ : 3 /* Left */) : (dy > 0 ? 2 /* Down */ : 0 /* Up */);
+                let direction = absDx > absDy ? (dx > 0 ? Direction.Right : Direction.Left) : (dy > 0 ? Direction.Down : Direction.Up);
                 self.raiseMove(event, direction);
             }
         });
     };
-    ;
-    TsKeyboardInputManager.prototype.raise = function (event, boardEvent) {
+
+    private raise(event: Event, boardEvent: BoardEvent) {
         event.preventDefault();
         this.boardEventHandler(boardEvent);
-    };
-    TsKeyboardInputManager.prototype.raiseMove = function (event, direction) {
+    }
+
+    raiseMove(event: Event, direction: Direction) {
         // this.raise(event, {move: true, direction: direction});
         this.raise(event, new Move(direction));
-    };
-    TsKeyboardInputManager.prototype.raiseRestart = function (event) {
+    }
+
+    raiseRestart(event: Event) {
         // this.raise(event, {restart: true});
         this.raise(event, new Restart());
     };
-    ;
-    TsKeyboardInputManager.prototype.raiseKeepPlaying = function (event) {
+
+    raiseKeepPlaying(event: Event) {
         // this.raise(event, {keepPlaying: true});
         this.raise(event, new KeepPlaying());
     };
-    ;
-    TsKeyboardInputManager.prototype.bindButtonPress = function (selector, fn) {
+    
+    bindButtonPress(selector, fn) {
         var button = document.querySelector(selector);
         button.addEventListener("click", fn.bind(this));
         button.addEventListener(this.eventTouchend, fn.bind(this));
     };
-    ;
-    return TsKeyboardInputManager;
-})();
+}
