@@ -4,7 +4,12 @@ var Tile = (function () {
         this.y = position.y;
         this.value = value || 2;
     }
-    Tile.prototype.savePosition = function () {
+    Tile.prototype.getPreviousOrCurrentPosition = function () {
+        return this.previousPosition || { x: this.x, y: this.y };
+    };
+    Tile.prototype.saveCurrentPositionAsPrevious = function () {
+        // Not sure why, but those two operations are always in pair!
+        this.mergedFrom = null;
         this.previousPosition = {
             x: this.x,
             y: this.y
@@ -23,6 +28,14 @@ var Tile = (function () {
             value: this.value
         };
     };
+    Tile.prototype.getValue = function () {
+        return this.value;
+    };
+    Tile.prototype.getX = function () {
+        return this.x;
+    };
+    Tile.prototype.getY = function () {
+        return this.y;
+    };
     return Tile;
 })();
-//# sourceMappingURL=tile.js.map

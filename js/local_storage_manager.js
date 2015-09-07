@@ -1,3 +1,4 @@
+/// <reference path="tile.ts"/>
 var CustomLocalStorage = (function () {
     function CustomLocalStorage() {
         // TODO: switch to Map<??, string>.
@@ -50,6 +51,11 @@ var LocalStorageManager = (function () {
     };
     LocalStorageManager.prototype.setBestScore = function (score) {
         this.storage.setItem(LocalStorageManager.bestScoreKey, score.toString());
+    };
+    LocalStorageManager.prototype.updateBestScoreIfNeeded = function (score) {
+        if (this.getBestScore() < score) {
+            this.setBestScore(score);
+        }
     };
     // Game state getters/setters and clearing
     LocalStorageManager.prototype.getGameState = function () {

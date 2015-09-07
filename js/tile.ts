@@ -1,21 +1,37 @@
+interface GameState {
+    score: number;
+    over: boolean;
+    won: boolean;
+    keepPlaying: boolean;
+    grid: {
+        size: number;
+        cells: Array<TileState[]>;
+    }
+}
+
+// TODO: add namespace to avoid Tile suffix for Position type!
 interface TilePosition {
     x: number;
     y: number;
 }
 
-interface TileData {
+interface TileState {
     position: TilePosition;
     value: number;
 }
 
 class Tile {
-    x: number;
-    y: number;
-    value: number;
-    previousPosition: TilePosition;
+    public x: number;
+    public y: number;
+    public value: number;
+    public previousPosition: TilePosition;
+    
+    public getPreviousOrCurrentPosition(): TilePosition {
+        return this.previousPosition || {x: this.x, y: this.y};
+    }
 
     // TODO: next step - wrap this into methods and hide away!
-    public mergeFrom: any;
+    public mergedFrom: any;
 
     constructor(position: TilePosition, value: number) {
         this.x = position.x;
@@ -23,7 +39,10 @@ class Tile {
         this.value = value || 2;
     }
 
-    savePosition(): void {
+    saveCurrentPositionAsPrevious(): void {
+        // Not sure why, but those two operations are always in pair!
+        this.mergedFrom = null;
+        
         this.previousPosition = {
             x: this.x,
             y: this.y
@@ -35,7 +54,7 @@ class Tile {
         this.y = position.y;
     }
 
-    serialize(): TileData {
+    serialize(): TileState {
         return {
             position: {
                 x: this.x,
@@ -43,6 +62,18 @@ class Tile {
             },
             value: this.value
         };
+    }
+    
+    getValue(): number {
+        return this.value;
+    }
+    
+    getX(): number {
+        return this.x;
+    }
+    
+    getY(): number {
+        return this.y;
     }
 }
 

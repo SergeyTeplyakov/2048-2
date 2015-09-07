@@ -1,3 +1,5 @@
+/// <reference path="tile.ts"/>
+
 class CustomLocalStorage implements Storage {
     // TODO: switch to Map<??, string>.
     _data: any = {};    
@@ -64,15 +66,21 @@ class LocalStorageManager {
     setBestScore(score: number) {
         this.storage.setItem(LocalStorageManager.bestScoreKey, score.toString());
     }
+    
+    updateBestScoreIfNeeded(score: number) {
+        if (this.getBestScore() < score) {
+            this.setBestScore(score);
+        }
+    }
 
     // Game state getters/setters and clearing
-    getGameState() {
+    getGameState(): GameState {
         var stateJSON = this.storage.getItem(LocalStorageManager.gameStateKey);
         return stateJSON ? JSON.parse(stateJSON) : null;
     }
 
     // Add strongly-typed game state
-    setGameState(gameState) {
+    setGameState(gameState: GameState) {
         this.storage.setItem(LocalStorageManager.gameStateKey, JSON.stringify(gameState));
     }
 
