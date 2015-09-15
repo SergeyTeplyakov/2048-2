@@ -52,6 +52,53 @@
 }
 
 // Keyframe animations
+@mixin keyframes_move_up() {
+  @-webkit-keyframes move-up {
+    @content;
+  }
+  @-moz-keyframes move-up {
+    @content;
+  }
+  @keyframes move-up {
+    @content;
+  }
+}
+
+@mixin keyframes_fade_in() {
+  @-webkit-keyframes fade-in {
+    @content;
+  }
+  @-moz-keyframes fade-in {
+    @content;
+  }
+  @keyframes fade-in {
+    @content;
+  }
+}
+
+@mixin keyframes_appear() {
+  @-webkit-keyframes appear {
+    @content;
+  }
+  @-moz-keyframes appear {
+    @content;
+  }
+  @keyframes appear {
+    @content;
+  }
+}
+
+@mixin keyframes_pop() {
+  @-webkit-keyframes pop {
+    @content;
+  }
+  @-moz-keyframes pop {
+    @content;
+  }
+  @keyframes pop {
+    @content;
+  }
+}
 @mixin keyframes($animation-name) {
   @-webkit-keyframes $animation-name {
     @content;

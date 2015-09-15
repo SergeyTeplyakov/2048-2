@@ -1,11 +1,16 @@
 @import "helpers";
 @import "fonts/clear-sans.css";
 
-$field-width: 500px;
-$grid-spacing: 15px;
-$grid-row-cells: 4;
-$tile-size: ($field-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells;
+$grid-row-count: 4;
+
+$tile-size: 100px;
+$grid-spacing: 10px;
+$grid-row-size: $tile-size + $grid-spacing;
+
+$tile-font-size: $tile-size * 0.75;
 $tile-border-radius: 3px;
+
+$field-width: ($tile-size + $grid-spacing)*($grid-row-count) + $grid-spacing;
 
 $mobile-threshold: $field-width + 20px;
 
@@ -47,7 +52,7 @@ h1.title {
   float: left;
 }
 
-@include keyframes(move-up) {
+@include keyframes_move_up() {
   0% {
     top: 25px;
     opacity: 1;
@@ -145,7 +150,7 @@ hr {
   margin: 0 auto;
 }
 
-@include keyframes(fade-in) {
+@include keyframes_fade_in() {
   0% {
     opacity: 0;
   }
@@ -296,8 +301,8 @@ hr {
     }
 
     // Build position classes
-    @for $x from 1 through $grid-row-cells {
-      @for $y from 1 through $grid-row-cells {
+    @for $x from 1 through $grid-row-count {
+      @for $y from 1 through $grid-row-count {
         &.tile-position-#{$x}-#{$y} {
           $xPos: floor(($tile-size + $grid-spacing) * ($x - 1));
           $yPos: floor(($tile-size + $grid-spacing) * ($y - 1));
@@ -414,7 +419,7 @@ hr {
   }
 }
 
-@include keyframes(appear) {
+@include keyframes_appear() {
   0% {
     opacity: 0;
     @include transform(scale(0));
@@ -431,7 +436,7 @@ hr {
   @include animation-fill-mode(backwards);
 }
 
-@include keyframes(pop) {
+@include keyframes_pop() {
   0% {
     @include transform(scale(0));
   }
@@ -474,11 +479,16 @@ hr {
 
 @include smaller($mobile-threshold) {
   // Redefine variables for smaller screens
-  $field-width: 280px;
+
+  $tile-size: 40px;
   $grid-spacing: 10px;
-  $grid-row-cells: 4;
-  $tile-size: ($field-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells;
+  $grid-row-size: $tile-size + $grid-spacing;
+
+  $tile-font-size: $tile-size * 0.75;
   $tile-border-radius: 3px;
+
+  $field-width: ($tile-size + $grid-spacing)*($grid-row-count) + $grid-spacing;
+
   $game-container-margin-top: 17px;
 
   html, body {
