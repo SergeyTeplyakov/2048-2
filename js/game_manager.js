@@ -104,13 +104,11 @@ var GameManager = (function () {
         this.actuator.continueGame(); // Clear the game won/lost message
         this.setup();
     };
-    ;
     // Keep playing after winning (allows going over 2048)
     GameManager.prototype.keepPlayingFunc = function () {
         this.keepPlaying = true;
         this.actuator.continueGame(); // Clear the game won/lost message
     };
-    ;
     GameManager.prototype.isGameTerminated = function () {
         return this.over || (this.won && !this.keepPlaying);
     };
@@ -132,14 +130,12 @@ var GameManager = (function () {
             }
         });
     };
-    ;
     // Move a tile and its representation
     GameManager.prototype.moveTile = function (tile, cell) {
         this.grid.cells[tile.x][tile.y] = null;
         this.grid.cells[cell.x][cell.y] = tile;
         tile.updatePosition(cell);
     };
-    ;
     // Move tiles on the grid in the specified direction
     GameManager.prototype.move = function (direction) {
         // 0: up, 1: right, 2: down, 3: left
@@ -191,7 +187,6 @@ var GameManager = (function () {
             this.actuate();
         }
     };
-    ;
     // // Get the vector representing the chosen direction
     // getVector(direction): TilePosition {
     //     // Vectors representing tile movement
@@ -219,7 +214,6 @@ var GameManager = (function () {
             traversals.y = traversals.y.reverse();
         return traversals;
     };
-    ;
     GameManager.prototype.findFarthestPosition = function (cell, vector) {
         var previous;
         // Progress towards the vector direction until an obstacle is found
@@ -233,11 +227,9 @@ var GameManager = (function () {
             next: cell // Used to check if a merge is required
         };
     };
-    ;
     GameManager.prototype.movesAvailable = function () {
         return this.grid.cellsAvailable() || this.tileMatchesAvailable();
     };
-    ;
     // Check for available matches between tiles (more expensive check)
     GameManager.prototype.tileMatchesAvailable = function () {
         for (var x = 0; x < this.size; x++) {
@@ -259,7 +251,6 @@ var GameManager = (function () {
         }
         return false;
     };
-    ;
     return GameManager;
 })();
 function getRandomTileValue() {
@@ -268,3 +259,4 @@ function getRandomTileValue() {
 function positionsEqual(left, right) {
     return left.x === right.x && left.y === right.y;
 }
+//# sourceMappingURL=game_manager.js.map

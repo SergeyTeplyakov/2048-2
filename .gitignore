@@ -6,3 +6,9 @@
 
 /bin/
 /obj/
+
+/.settings/
+/.vs/
+2048.csproj.user
+web.*
+

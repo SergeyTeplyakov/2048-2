@@ -52,8 +52,6 @@ class GameManager {
     private won: boolean;
     private keepPlaying: boolean;
     
-    
-    
     constructor(size: number) {
         this.size = size;
         
@@ -149,13 +147,13 @@ class GameManager {
         this.storageManager.clearGameState();
         this.actuator.continueGame(); // Clear the game won/lost message
         this.setup();
-    };
+    }
 
     // Keep playing after winning (allows going over 2048)
     keepPlayingFunc() {
         this.keepPlaying = true;
         this.actuator.continueGame(); // Clear the game won/lost message
-    };
+    }
 
     isGameTerminated() {
         return this.over || (this.won && !this.keepPlaying);
@@ -179,14 +177,14 @@ class GameManager {
                 tile.saveCurrentPositionAsPrevious();
             }
         });
-    };
+    }
 
     // Move a tile and its representation
     moveTile(tile: Tile, cell: TilePosition) {
         this.grid.cells[tile.x][tile.y] = null;
         this.grid.cells[cell.x][cell.y] = tile;
         tile.updatePosition(cell);
-    };
+    }
 
     // Move tiles on the grid in the specified direction
     move(direction: Direction) {
@@ -250,7 +248,7 @@ class GameManager {
     
             this.actuate();
         }
-    };
+    }
 
     // // Get the vector representing the chosen direction
     // getVector(direction): TilePosition {
@@ -281,7 +279,7 @@ class GameManager {
         if (vector.y === 1) traversals.y = traversals.y.reverse();
     
         return traversals;
-    };
+    }
 
     findFarthestPosition(cell, vector) {
         var previous;
@@ -297,11 +295,11 @@ class GameManager {
             farthest: previous,
             next: cell // Used to check if a merge is required
         };
-    };
+    }
 
     movesAvailable() {
         return this.grid.cellsAvailable() || this.tileMatchesAvailable();
-    };
+    }
 
     // Check for available matches between tiles (more expensive check)
     tileMatchesAvailable() {
@@ -325,7 +323,7 @@ class GameManager {
         }
     
         return false;
-    };
+    }
 }
 
 function getRandomTileValue(): number {

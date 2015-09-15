@@ -39,3 +39,4 @@ var Tile = (function () {
     };
     return Tile;
 })();
+//# sourceMappingURL=tile.js.map
