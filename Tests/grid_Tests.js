@@ -87,7 +87,7 @@ var Grid_Tests;
         [2, , 4, ,].forEach(function (v, idx) { grid.setValue({ x: idx, y: 2, value: v }); });
         [8, , 2, 4].forEach(function (v, idx) { grid.setValue({ x: idx, y: 3, value: v }); });
         var moveResult = grid.move(0 /* Up */);
-        equal(grid.valueAt(0, 0), 2);
+        equal(grid.valueAt(0, 0), 3, grid.toString());
         equal(grid.valueAt(0, 1), 8);
         equal(grid.valueAt(1, 0), 2);
         equal(grid.valueAt(2, 0), 8);

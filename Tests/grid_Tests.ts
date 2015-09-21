@@ -113,7 +113,7 @@ module Grid_Tests {
 
         let moveResult = grid.move(Direction.Up);
 
-        equal(grid.valueAt(0, 0), 2);
+        equal(grid.valueAt(0, 0), 3, grid.toString());
         equal(grid.valueAt(0, 1), 8);
         equal(grid.valueAt(1, 0), 2);
         equal(grid.valueAt(2, 0), 8);

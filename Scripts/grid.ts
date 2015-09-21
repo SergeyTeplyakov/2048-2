@@ -156,10 +156,14 @@ module Model {
         public toString() {
             let result: string = "";
 
-            // Current resulting string object is not looks good!
-            for (let x = 0; x < this.size; x++) {
+            // To get more appropriate view, need to print this stuff with per-column bases            
+            for (let y = 0; y < this.size; y++) {
+                let row = [];
+                for (let x = 0; x < this.size; x++) {
+                    row.push(this.cells[x][y]);
+                }
 
-                result += this.cells[x].map(c => c ? c.toString() : " ").join(", ");
+                result += row.map(c => c ? c.toString() : " ").join(", ");
                 result += "\r\n";
             }
 

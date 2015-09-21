@@ -117,9 +117,13 @@ var Model;
          */
         Grid.prototype.toString = function () {
             var result = "";
-            // Current resulting string object is not looks good!
-            for (var x = 0; x < this.size; x++) {
-                result += this.cells[x].map(function (c) { return c ? c.toString() : " "; }).join(", ");
+            // To get more appropriate view, need to print this stuff with per-column bases            
+            for (var y = 0; y < this.size; y++) {
+                var row = [];
+                for (var x = 0; x < this.size; x++) {
+                    row.push(this.cells[x][y]);
+                }
+                result += row.map(function (c) { return c ? c.toString() : " "; }).join(", ");
                 result += "\r\n";
             }
             return result;
