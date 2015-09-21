@@ -60,7 +60,7 @@ class HtmlActuator {
         }
     };
     
-    addTile(tile: Tile) {
+    addTile(tile: Tiles.Tile) {
         var self = this;
     
         var wrapper = document.createElement("div");
@@ -213,7 +213,7 @@ HTMLActuator.prototype.clearContainer = function (container) {
     }
 };
 
-HTMLActuator.prototype.addTile = function (tile: Tile) {
+HTMLActuator.prototype.addTile = function (tile: Tiles.Tile) {
     var self = this;
 
     var wrapper = document.createElement("div");
@@ -267,11 +267,11 @@ HTMLActuator.prototype.applyClasses = function (element, classes) {
 //     return { x: position.x + 1, y: position.y + 1 };
 // };
 
-function normalizePosition(position: TilePosition) {
+function normalizePosition(position: Tiles.TilePosition) {
     return {x: position.x + 1, y: position.y + 1};
 }
 
-function getPositionClass(position: TilePosition) {
+function getPositionClass(position: Tiles.TilePosition) {
     let np = normalizePosition(position);
     return `tile-position-${np.x}-${np.y}`;
 }

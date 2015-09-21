@@ -74,13 +74,13 @@ class LocalStorageManager {
     }
 
     // Game state getters/setters and clearing
-    getGameState(): GameState {
+    getGameState(): Tiles.GameState {
         var stateJSON = this.storage.getItem(LocalStorageManager.gameStateKey);
         return stateJSON ? JSON.parse(stateJSON) : null;
     }
 
     // Add strongly-typed game state
-    setGameState(gameState: GameState) {
+    setGameState(gameState: Tiles.GameState) {
         this.storage.setItem(LocalStorageManager.gameStateKey, JSON.stringify(gameState));
     }
 

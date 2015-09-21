@@ -2,24 +2,24 @@
 
 class Grid {
     size: number;
-    cells: Array<Tile[]>;
+    cells: Array<Tiles.Tile[]>;
 
-    constructor(size: number, previousState?: Array<TileState[]>) {
+    constructor(size: number, previousState?: Array<Tiles.TileState[]>) {
         this.size = size;
 
         this.cells = previousState ? Grid.fromState(size, previousState) : Grid.empty(size);
     }
 
-    private static fromState(size: number, state: Array<TileState[]>): Tile[][] {
-        var cells = new Array<Tile[]>(size);
+    private static fromState(size: number, state: Array<Tiles.TileState[]>): Array<Tiles.Tile>[] {
+        var cells = new Array<Tiles.Tile[]>(size);
 
         for (var x = 0; x < size; x++) {
-            var row = cells[x] = new Array<Tile>(size);
+            var row = cells[x] = new Array<Tiles.Tile>(size);
 
             for (var y = 0; y < size; y++) {
                 // TODO: it seems that this is a bug, if state[x][y] is null! Right?
                 var tile = state[x][y];
-                row[y] = tile && new Tile(tile.position, tile.value);
+                row[y] = tile && new Tiles.Tile(tile.position, tile.value);
                 
                 
                 
@@ -33,11 +33,11 @@ class Grid {
         return cells;
     }
 
-    private static empty(size: number): Array<Tile[]> {
-        var cells = new Array<Tile[]>(size);
+    private static empty(size: number): Array<Tiles.Tile[]> {
+        var cells = new Array<Tiles.Tile[]>(size);
 
         for (let x = 0; x < size; x++) {
-            cells[x] = new Array<Tile>(size); 
+            cells[x] = new Array<Tiles.Tile>(size); 
         }
 
         return cells;
@@ -61,7 +61,7 @@ class Grid {
     }
   
     // Call callback for every cell  
-    eachCell(callback: (x: number, y: number, tile: Tile) => void): void {
+    eachCell(callback: (x: number, y: number, tile: Tiles.Tile) => void): void {
         for (var x = 0; x < this.size; x++) {
             for (var y = 0; y < this.size; y++) {
                 callback(x, y, this.cells[x][y]);
@@ -83,18 +83,18 @@ class Grid {
     }
     
     // Check if the specified cell is taken
-    cellAvailable(cell: TilePosition): boolean {
+    cellAvailable(cell: Tiles.TilePosition): boolean {
         return !this.cellOccupied(cell);
     }
     
-    cellOccupied(cell: TilePosition): boolean {
+    cellOccupied(cell: Tiles.TilePosition): boolean {
         
         // TODO: is this the same as cellContent(cell) != null? I dont think that it could be undefined!
         // TODO: this stuff hids potential bugs and returns null if cell is invalid!
         return !!this.cellContent(cell);
     }
     
-    cellContent(cell: TilePosition): Tile {
+    cellContent(cell: Tiles.TilePosition): Tiles.Tile {
         // TODO: not sure why this required!! This is a bug if the cell is out of bounds!
         if (this.withinBounds(cell)) {
             return this.cells[cell.x][cell.y];
@@ -104,22 +104,22 @@ class Grid {
     }
     
     // Inserts a tile at its position
-    insertTile(tile: Tile) {
+    insertTile(tile: Tiles.Tile) {
         this.cells[tile.x][tile.y] = tile;
     }
     
-    removeTile(tile: Tile) {
+    removeTile(tile: Tiles.Tile) {
         this.cells[tile.x][tile.y] = null;
     };
     
     // TODO: why the hell this is reauired!! This is a bug if this returns false!!!
-    withinBounds(position: TilePosition): boolean {
+    withinBounds(position: Tiles.TilePosition): boolean {
         return position.x >= 0 && position.x < this.size &&
             position.y >= 0 && position.y < this.size;
     }
 
-    serialize(): { size: number, cells: Array<TileState[]> } {
-        var cellState = new Array<TileState[]>(this.size);
+    serialize(): { size: number, cells: Array<Tiles.TileState[]> } {
+        var cellState = new Array<Tiles.TileState[]>(this.size);
 
         for (var x = 0; x < this.size; x++) {
             var row = cellState[x] = [];

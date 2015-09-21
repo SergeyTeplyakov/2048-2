@@ -11,7 +11,7 @@ var Grid = (function () {
             for (var y = 0; y < size; y++) {
                 // TODO: it seems that this is a bug, if state[x][y] is null! Right?
                 var tile = state[x][y];
-                row[y] = tile && new Tile(tile.position, tile.value);
+                row[y] = tile && new Tiles.Tile(tile.position, tile.value);
             }
         }
         return cells;

@@ -12,3 +12,4 @@
 2048.csproj.user
 web.*
 
+/packages/

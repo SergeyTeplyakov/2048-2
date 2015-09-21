@@ -23,21 +23,28 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="index.html" />
-    <Content Include="js\animframe_polyfill.js" />
-    <Content Include="js\application.js" />
-    <Content Include="js\bind_polyfill.js" />
-    <Content Include="js\classlist_polyfill.js" />
-    <Content Include="js\game_manager.js" />
-    <Content Include="js\grid.js" />
-    <Content Include="js\html_actuator.js" />
-    <Content Include="js\keyboard_input_manager.js" />
-    <Content Include="js\local_storage_manager.js" />
-    <TypeScriptCompile Include="js\tile.ts" />
+    <Content Include="Scripts\animframe_polyfill.js" />
+    <Content Include="Scripts\application.js" />
+    <Content Include="Scripts\bind_polyfill.js" />
+    <Content Include="Scripts\classlist_polyfill.js" />
     <Content Include="style\fonts\clear-sans.css" />
     <Content Include="style\fonts\ClearSans-Bold-webfont.svg" />
     <Content Include="style\fonts\ClearSans-Light-webfont.svg" />
     <Content Include="style\fonts\ClearSans-Regular-webfont.svg" />
     <Content Include="style\main.css" />
+    <TypeScriptCompile Include="Scripts\content_storage.ts" />
+    <TypeScriptCompile Include="Scripts\contract.ts" />
+    <TypeScriptCompile Include="Scripts\game_controller.ts" />
+    <TypeScriptCompile Include="Scripts\globals.ts" />
+    <TypeScriptCompile Include="Scripts\grid_controller.ts" />
+    <TypeScriptCompile Include="Scripts\grid.ts" />
+    <TypeScriptCompile Include="Scripts\html_view.ts" />
+    <TypeScriptCompile Include="Scripts\keyboard_listener.ts" />
+    <TypeScriptCompile Include="Scripts\state.ts" />
+    <TypeScriptCompile Include="Scripts\typings\qunit\qunit.d.ts" />
+    <TypeScriptCompile Include="Scripts\Utils.ts" />
+    <TypeScriptCompile Include="Tests\grid_Tests.ts" />
+    <TypeScriptCompile Include="Tests\content_storage_Tests.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="style\fonts\ClearSans-Bold-webfont.eot" />
@@ -50,7 +57,10 @@
     <Content Include="style\main.scss" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="web.config" />
+    <Content Include="web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="packages.config" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
