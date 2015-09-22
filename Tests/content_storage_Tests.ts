@@ -18,7 +18,8 @@ module ContentStorage_Tests {
             status: GameStatus.KeepPlaying,
             grid: {
                 size: 1,
-                cells: [<Tile>{x: 0, y: 0, value: 2}]
+                cells: [<Tile>{ x: 0, y: 0, value: 2 }],
+                stableCells: [],
             }
         });
 
@@ -40,11 +41,13 @@ module ContentStorage_Tests {
         equal(storage.getGameStatistic(), undefined);
         
         storage.updateGameStatistic({
-            bestScore: 42
+            bestScore: 42,
+            level: 3
         });
 
         let gameState = storage.getGameStatistic();
         ok(gameState, 'gameStatistic should not be null or undefined');
         equal(gameState.bestScore, 42, `best score should be 42, but was ${gameState.bestScore}`);
+        equal(gameState.level, 3, `level should be 3, but was ${gameState.level}`);
     });
 }

@@ -19,6 +19,22 @@ module Store {
             return stateJson ? JSON.parse(stateJson) : null;
         }
 
+        public getCurrentLevel(): number {
+            let statistics = this.getGameStatistic();
+            return (statistics && statistics.level) || 1;
+        }
+
+        public saveCurrentLevel(newLevel: number) {
+            Contract.requires(newLevel >= 0, `newLevel should be >= 0, but was ${newLevel}`);
+
+            let statistics = this.getGameStatistic();
+            statistics = statistics || { bestScore: 0, level: 1 };
+
+            statistics.level = newLevel;
+
+            this.updateGameStatistic(statistics);
+        }
+
         public updateGameStatistic(state: State.GameStatistic) {
             this.storage.setItem(permanentStateKey, JSON.stringify(state));
         }
@@ -51,8 +67,10 @@ module Store {
             Contract.requires(bestScore >= 0, `bestScore should be >= 0, but was ${bestScore}`);
 
             // You can read this code as: if (bestScore > (statistics?.bestScore ?? 0) {
-            if (bestScore > this.getBestScore()) {
-                this.updateGameStatistic({ bestScore: bestScore });
+            let permanentState = this.getGameStatistic();
+
+            if (bestScore > ((permanentState && permanentState.bestScore) || 0)) {
+                this.updateGameStatistic({ bestScore: bestScore, level: (permanentState && permanentState.level) || 1 });
             }
         }
     }

@@ -23,8 +23,8 @@ var State;
     // Helper namespace with additional functions for Tiles
     var Tile;
     (function (Tile) {
-        function newTile(x, y, value) {
-            return { x: x, y: y, value: value, type: TileType.New };
+        function newTile(x, y, value, isStable) {
+            return { x: x, y: y, value: value, type: TileType.New, isStable: isStable };
         }
         Tile.newTile = newTile;
         function moveTile(x, y, value, origin) {
@@ -40,14 +40,18 @@ var State;
             return { x: x, y: y, value: value, type: TileType.Old };
         }
         Tile.oldTile = oldTile;
+        function stableTile(x, y, value) {
+            return { x: x, y: y, value: value, type: TileType.Old, isStable: true };
+        }
+        Tile.stableTile = stableTile;
         function cloneTile(tile) {
             return { x: tile.x, y: tile.y, value: tile.value, type: tile.type, sourceCells: tile.origins };
         }
         Tile.cloneTile = cloneTile;
-        function mergeTiles(destination, value) {
+        function mergeTiles(destination, value, mergeWithStable) {
             var origins = [];
-            for (var _i = 2; _i < arguments.length; _i++) {
-                origins[_i - 2] = arguments[_i];
+            for (var _i = 3; _i < arguments.length; _i++) {
+                origins[_i - 3] = arguments[_i];
             }
             var sourceCells = origins.filter(function (f) { return notNull(f); });
             Contract.assert(sourceCells.length >= 1, "For merged cells at least one source cell should be defined");
@@ -56,7 +60,8 @@ var State;
                 y: destination.y,
                 value: value,
                 type: TileType.Merged,
-                origins: sourceCells
+                origins: sourceCells,
+                isStable: mergeWithStable,
             };
         }
         Tile.mergeTiles = mergeTiles;

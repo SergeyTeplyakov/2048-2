@@ -54,14 +54,24 @@ var View;
             if (tile.value > gameMaxValue)
                 classes.push("tile-super");
         };
-        HtmlViewImpl.prototype.addOldTile = function (tile) {
-            var wrapper = document.createElement("div");
-            var inner = document.createElement("div");
+        HtmlViewImpl.prototype.createClasses = function (tile) {
             var positionClass = getPositionClass(tile);
             // We can't use classlist because it somehow glitches when replacing classes
             var classes = ["tile", "tile-" + tile.value, positionClass];
             if (tile.value > 2048)
                 classes.push("tile-super");
+            if (tile.isStable)
+                classes.push("tile-stable");
+            return classes;
+        };
+        HtmlViewImpl.prototype.addOldTile = function (tile) {
+            var wrapper = document.createElement("div");
+            var inner = document.createElement("div");
+            //let positionClass = getPositionClass(tile);
+            //// We can't use classlist because it somehow glitches when replacing classes
+            //var classes = ["tile", "tile-" + tile.value, positionClass];
+            //if (tile.value > 2048) classes.push("tile-super");
+            var classes = this.createClasses(tile);
             this.applyClasses(wrapper, classes);
             inner.classList.add("tile-inner");
             inner.textContent = tile.value.toString();
@@ -73,11 +83,11 @@ var View;
         HtmlViewImpl.prototype.addNewTile = function (tile) {
             var wrapper = document.createElement("div");
             var inner = document.createElement("div");
-            var positionClass = getPositionClass(tile);
-            // We can't use classlist because it somehow glitches when replacing classes
-            var classes = ["tile", "tile-" + tile.value, positionClass];
-            if (tile.value > 2048)
-                classes.push("tile-super");
+            //let positionClass = getPositionClass(tile);
+            //// We can't use classlist because it somehow glitches when replacing classes
+            //var classes = ["tile", "tile-" + tile.value, positionClass];
+            //if (tile.value > 2048) classes.push("tile-super");
+            var classes = this.createClasses(tile);
             this.applyClasses(wrapper, classes);
             inner.classList.add("tile-inner");
             inner.textContent = tile.value.toString();
@@ -117,12 +127,12 @@ var View;
             var wrapper = document.createElement("div");
             var inner = document.createElement("div");
             Contract.assert(tile.origins && tile.origins.length !== 0, "For merged tiles origins should have at least one element");
-            var previousPosition = tile; //tile.origins[tile.origins.length - 1];
-            var positionClass = getPositionClass(previousPosition);
+            //let previousPosition = tile;//tile.origins[tile.origins.length - 1];
+            //let positionClass = getPositionClass(previousPosition);
             // We can't use classlist because it somehow glitches when replacing classes
-            var classes = ["tile", "tile-" + tile.value, positionClass];
-            if (tile.value > 2048)
-                classes.push("tile-super");
+            //var classes = ["tile", "tile-" + tile.value, positionClass];
+            //if (tile.value > 2048) classes.push("tile-super");
+            var classes = this.createClasses(tile);
             this.applyClasses(wrapper, classes);
             inner.classList.add("tile-inner");
             inner.textContent = tile.value.toString();

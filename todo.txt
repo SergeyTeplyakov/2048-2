@@ -1,0 +1,2 @@
+﻿1. Add grunt support
+2. Merge and minify declarations

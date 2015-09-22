@@ -83,7 +83,8 @@ module Model {
 
             return {
                 size: this.size,
-                cells: nonEmptyCells
+                cells: nonEmptyCells,
+                stableCells: [this.stable].filter(f => notNull(f))
             }
         }
 
@@ -107,6 +108,12 @@ module Model {
             Contract.requires(notNull(tile.value), 'value should not be null or undefined');
 
             this.cells[tile.x][tile.y] = tile.value;
+        }
+
+        private stable: TileState;
+        public addStableTile(x: number, y: number, value: number) {
+            this.cells[x][y] = value;
+            this.stable = { x: x, y: y, value: value };
         }
 
         /**
@@ -195,7 +202,15 @@ module Model {
                 let row = new Array<Tile>(size);
 
                 for (let y = 0; y < size; y++) {
-                    row[y] = State.Tile.oldTile(x, y, this.cells[x][y]);
+                    let tile = State.Tile.oldTile(x, y, this.cells[x][y]);
+
+                    if (this.stable) {
+                        if (this.stable.x === x && this.stable.y === y) {
+                            tile = State.Tile.stableTile(x, y, this.stable.value);
+                        }
+                    }
+
+                    row[y] = tile;
                 }
 
                 cells[x] = row;
@@ -222,12 +237,6 @@ module Model {
             });
 
             return cells;
-        }
-
-        public tileAt(x: number, y: number): Tile {
-            Contract.requires(this.isInRange({ x: x, y: y }), 'x and y should be within bounds.');
-
-            return State.Tile.oldTile(x, y, this.cells[x][y]);
         }
 
         private tileFrom(x: number, y: number, grid: Tile[][]): Tile {
@@ -283,7 +292,6 @@ module Model {
             return previousCandidate;
         }
 
-        /*pure*/
         private tryMove(direction: Direction) {
             let stateCells: Array<Tile> = [];
 
@@ -315,7 +323,7 @@ module Model {
                 let tile = this.tileFrom(x, y, grid);
                 
                 // Only non-empty tiles could change the location during the move
-                if (tile.value) {
+                if (tile.value && !tile.isStable) {
                     // Looking for a destination tile first
                     let destination = this.getTheFarthestDestinationTile(tile, vector, grid);
 
@@ -330,7 +338,8 @@ module Model {
                             // in this case both cells should be store: original location of moved cell
                             // and the original location of the current cell.
 
-                            result = State.Tile.mergeTiles(destination, tile.value * 2, tile, ...destination.origins);
+                            // TODO: all this stable propagation is a bit silly!!
+                            result = State.Tile.mergeTiles(destination, tile.value * 2, destination.isStable, tile, ...destination.origins);
                         } else {
                             // this is just a move
                             result = State.Tile.moveTile(destination.x, destination.y, tile.value, tile);

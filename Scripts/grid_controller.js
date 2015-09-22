@@ -28,6 +28,15 @@ var Model;
             }
             return result;
         };
+        GridController.prototype.addRandomStableTiles = function (count, value) {
+            var result = [];
+            for (var i = 0; i < count; i++) {
+                var cell = this.grid.randomAvailableCell();
+                this.grid.addStableTile(cell.x, cell.y, value);
+                result.push(Tile.newTile(cell.x, cell.y, value, true));
+            }
+            return result;
+        };
         GridController.prototype.move = function (direction) {
             return this.grid.move(direction);
         };
@@ -43,12 +52,19 @@ var Model;
         //----------------------------------------------------------------------------
         // Implementation
         //----------------------------------------------------------------------------
-        GridController.prototype.applyGridChanges = function (tiles) {
-            for (var _i = 0; _i < tiles.length; _i++) {
-                var tile = tiles[_i];
+        GridController.prototype.applyGridChanges = function (gridState) {
+            for (var _i = 0, _a = gridState.cells; _i < _a.length; _i++) {
+                var tile = _a[_i];
                 Contract.assert(this.grid.isInRange(tile), 'tile should be withing grid range');
                 Contract.assert(notNull(tile.value), 'tile.value should not be null or undefined');
                 this.grid.setValue(tile);
+            }
+            for (var _b = 0, _c = gridState.stableCells || []; _b < _c.length; _b++) {
+                var tile = _c[_b];
+                Contract.assert(this.grid.isInRange(tile), 'tile should be withing grid range');
+                Contract.assert(notNull(tile.value), 'tile.value should not be null or undefined');
+                // TODO: inconsistency!!
+                this.grid.addStableTile(tile.x, tile.y, tile.value);
             }
         };
         return GridController;

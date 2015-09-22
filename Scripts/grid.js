@@ -56,7 +56,8 @@ var Model;
             });
             return {
                 size: this.size,
-                cells: nonEmptyCells
+                cells: nonEmptyCells,
+                stableCells: [this.stable].filter(function (f) { return notNull(f); })
             };
         };
         /**
@@ -76,6 +77,10 @@ var Model;
             Contract.requires(!this.isOccupied(tile), 'Tile should not be occupied');
             Contract.requires(notNull(tile.value), 'value should not be null or undefined');
             this.cells[tile.x][tile.y] = tile.value;
+        };
+        Grid.prototype.addStableTile = function (x, y, value) {
+            this.cells[x][y] = value;
+            this.stable = { x: x, y: y, value: value };
         };
         /**
          * [not pure] Change the grid state by 'moving' all the tiles in specific direction.
@@ -145,7 +150,13 @@ var Model;
             for (var x = 0; x < size; x++) {
                 var row = new Array(size);
                 for (var y = 0; y < size; y++) {
-                    row[y] = State.Tile.oldTile(x, y, this.cells[x][y]);
+                    var tile = State.Tile.oldTile(x, y, this.cells[x][y]);
+                    if (this.stable) {
+                        if (this.stable.x === x && this.stable.y === y) {
+                            tile = State.Tile.stableTile(x, y, this.stable.value);
+                        }
+                    }
+                    row[y] = tile;
                 }
                 cells[x] = row;
             }
@@ -166,10 +177,6 @@ var Model;
                 }
             });
             return cells;
-        };
-        Grid.prototype.tileAt = function (x, y) {
-            Contract.requires(this.isInRange({ x: x, y: y }), 'x and y should be within bounds.');
-            return State.Tile.oldTile(x, y, this.cells[x][y]);
         };
         Grid.prototype.tileFrom = function (x, y, grid) {
             if ((x >= 0 && x < this.size) && (y >= 0 && y < this.size)) {
@@ -214,7 +221,6 @@ var Model;
             // code is unreachable
             return previousCandidate;
         };
-        /*pure*/
         Grid.prototype.tryMove = function (direction) {
             var stateCells = [];
             var newGridState = this.doMove(direction);
@@ -239,7 +245,7 @@ var Model;
             this.iterateOver(traversals, function (x, y) {
                 var tile = _this.tileFrom(x, y, grid);
                 // Only non-empty tiles could change the location during the move
-                if (tile.value) {
+                if (tile.value && !tile.isStable) {
                     // Looking for a destination tile first
                     var destination = _this.getTheFarthestDestinationTile(tile, vector, grid);
                     if (!State.cellsAreEquals(tile, destination)) {
@@ -250,7 +256,8 @@ var Model;
                             // When merging destination cell could be a result of the move.
                             // in this case both cells should be store: original location of moved cell
                             // and the original location of the current cell.
-                            result = (_a = State.Tile).mergeTiles.apply(_a, [destination, tile.value * 2, tile].concat(destination.origins));
+                            // TODO: all this stable propagation is a bit silly!!
+                            result = (_a = State.Tile).mergeTiles.apply(_a, [destination, tile.value * 2, destination.isStable, tile].concat(destination.origins));
                         }
                         else {
                             // this is just a move

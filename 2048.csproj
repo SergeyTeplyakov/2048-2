@@ -57,6 +57,7 @@
     <Content Include="style\main.scss" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="todo.txt" />
     <Content Include="web.config">
       <SubType>Designer</SubType>
     </Content>

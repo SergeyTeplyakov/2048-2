@@ -371,6 +371,15 @@ hr {
     @media screen and (max-width: 470px) {
       .tile.tile-super .tile-inner {
         font-size: 10px; } }
+  .tile.tile-stable .tile-inner {
+    /*color: aliceblue;*/
+    /*background: mix(red, $tile-gold-color, 10%);*/
+    box-shadow: 0 0 30px 2px black, inset 0 0 0 1px brown;
+    /*background:  #FFD700 ;*/
+    /*font-size: 45px;*/
+    /*@include smaller($mobile-threshold) {
+      font-size: 10px;
+    }*/ }
 
 @-webkit-keyframes appear {
   0% {

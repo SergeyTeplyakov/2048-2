@@ -24,6 +24,8 @@ $tile-gold-glow-color: lighten($tile-gold-color, 15%);
 $game-container-margin-top: 40px;
 $game-container-background: #bbada0;
 
+$stable-glow-color: black;
+
 $transition-speed: 100ms;
 
 html, body {
@@ -416,6 +418,13 @@ hr {
     @include smaller($mobile-threshold) {
       font-size: 10px;
     }
+  }
+
+  // for stable tiles
+  &.tile-stable .tile-inner {
+      $glow-opacity: 10;
+      box-shadow: 0 0 30px 2px rgba($stable-glow-color, $glow-opacity / 1.8),
+        inset 0 0 0 1px rgba(brown, $glow-opacity / 3);
   }
 }
 

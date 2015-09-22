@@ -11,6 +11,7 @@ module State {
 
     export interface GameStatistic {
         bestScore: number;
+        level: number; // valid only for advanced mode
     }
 
     export enum GameStatus {
@@ -22,6 +23,7 @@ module State {
     export interface GridState {
         size: number;
         cells: Array<TileState>; // Can't be null
+        stableCells: Array<TileState>; // Can't be null and could be empty
     }
 
     export interface GameState {
@@ -52,18 +54,21 @@ module State {
         Moved,
         Merged,
         Empty,
+        //Stable, // This is a new tile type that won't move at all!
     }
 
     export interface Tile extends TileState {
         type: TileType;
         // Empty for Old/New, 1 cell for Moved, 1 or 2 cells for Merged
         origins?: Cell[];
+
+        isStable?: boolean;
     }
 
     // Helper namespace with additional functions for Tiles
     export module Tile {
-        export function newTile(x: number, y: number, value: number): State.Tile {
-            return { x: x, y: y, value: value, type: TileType.New };
+        export function newTile(x: number, y: number, value: number, isStable?: boolean): State.Tile {
+            return { x: x, y: y, value: value, type: TileType.New, isStable: isStable};
         }
 
         export function moveTile(x: number, y: number, value: number, origin: Cell): State.Tile {
@@ -80,11 +85,15 @@ module State {
             return { x: x, y: y, value: value, type: TileType.Old };
         }
 
+        export function stableTile(x: number, y: number, value: number): State.Tile {
+            return { x: x, y: y, value: value, type: TileType.Old, isStable: true };
+        }
+
         export function cloneTile(tile: State.Tile): State.Tile {
             return { x: tile.x, y: tile.y, value: tile.value, type: tile.type, sourceCells: tile.origins };
         }
 
-        export function mergeTiles(destination: Cell, value: number, ...origins: Cell[]): Tile {
+        export function mergeTiles(destination: Cell, value: number, mergeWithStable: boolean, ...origins: Cell[]): Tile {
             let sourceCells = origins.filter(f => notNull(f));
 
             Contract.assert(sourceCells.length >= 1, "For merged cells at least one source cell should be defined");
@@ -94,7 +103,8 @@ module State {
                 y: destination.y,
                 value: value,
                 type: TileType.Merged,
-                origins: sourceCells
+                origins: sourceCells,
+                isStable: mergeWithStable,
             };
         }
 

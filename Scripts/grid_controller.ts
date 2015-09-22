@@ -13,7 +13,7 @@ module Model {
     export class GridController {
         private grid: Grid;
 
-        constructor(public size: number, previousState?: Array<TileState>) {
+        constructor(public size: number, previousState?: State.GridState) {
             this.grid = new Grid(size);
 
             if (previousState) {
@@ -39,6 +39,18 @@ module Model {
             return result;
         }
 
+        public addRandomStableTiles(count: number, value: number): Tile[] {
+            let result: Tile[] = [];
+
+            for (let i = 0; i < count; i++) {
+                let cell = this.grid.randomAvailableCell();
+                this.grid.addStableTile(cell.x, cell.y, value);
+                result.push(Tile.newTile(cell.x, cell.y, value, /*isStable*/true));
+            }
+
+            return result;
+        }
+
         public move(direction: Direction): Tile[] {
             return this.grid.move(direction);
         }
@@ -58,12 +70,19 @@ module Model {
         //----------------------------------------------------------------------------
         // Implementation
         //----------------------------------------------------------------------------
-        private applyGridChanges(tiles: Array<TileState>): void {
-            for (let tile of tiles) {
+        private applyGridChanges(gridState: State.GridState): void {
+            for (let tile of gridState.cells) {
                 Contract.assert(this.grid.isInRange(tile), 'tile should be withing grid range');
                 Contract.assert(notNull(tile.value), 'tile.value should not be null or undefined');
 
                 this.grid.setValue(tile);
+            }
+
+            for (let tile of gridState.stableCells || []) {
+                Contract.assert(this.grid.isInRange(tile), 'tile should be withing grid range');
+                Contract.assert(notNull(tile.value), 'tile.value should not be null or undefined');
+                // TODO: inconsistency!!
+                this.grid.addStableTile(tile.x, tile.y, tile.value);
             }
         }
     }

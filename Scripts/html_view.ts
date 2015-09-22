@@ -84,16 +84,30 @@ module View {
 
         }
 
-        private addOldTile(tile: State.Tile) {
-            var wrapper = document.createElement("div");
-            var inner = document.createElement("div");
-        
+        private createClasses(tile: State.Tile) {
             let positionClass = getPositionClass(tile);
     
             // We can't use classlist because it somehow glitches when replacing classes
             var classes = ["tile", "tile-" + tile.value, positionClass];
 
             if (tile.value > 2048) classes.push("tile-super");
+
+            if (tile.isStable) classes.push("tile-stable");
+
+            return classes;
+        }
+
+        private addOldTile(tile: State.Tile) {
+            var wrapper = document.createElement("div");
+            var inner = document.createElement("div");
+        
+            //let positionClass = getPositionClass(tile);
+    
+            //// We can't use classlist because it somehow glitches when replacing classes
+            //var classes = ["tile", "tile-" + tile.value, positionClass];
+
+            //if (tile.value > 2048) classes.push("tile-super");
+            let classes = this.createClasses(tile);
 
             this.applyClasses(wrapper, classes);
 
@@ -111,12 +125,14 @@ module View {
             var wrapper = document.createElement("div");
             var inner = document.createElement("div");
         
-            let positionClass = getPositionClass(tile);
+            //let positionClass = getPositionClass(tile);
     
-            // We can't use classlist because it somehow glitches when replacing classes
-            var classes = ["tile", "tile-" + tile.value, positionClass];
+            //// We can't use classlist because it somehow glitches when replacing classes
+            //var classes = ["tile", "tile-" + tile.value, positionClass];
 
-            if (tile.value > 2048) classes.push("tile-super");
+            //if (tile.value > 2048) classes.push("tile-super");
+
+            let classes = this.createClasses(tile);
 
             this.applyClasses(wrapper, classes);
 
@@ -170,14 +186,15 @@ module View {
             var inner = document.createElement("div");
 
             Contract.assert(tile.origins && tile.origins.length !== 0, "For merged tiles origins should have at least one element");
-            let previousPosition = tile;//tile.origins[tile.origins.length - 1];
+            //let previousPosition = tile;//tile.origins[tile.origins.length - 1];
 
-            let positionClass = getPositionClass(previousPosition);
+            //let positionClass = getPositionClass(previousPosition);
     
             // We can't use classlist because it somehow glitches when replacing classes
-            var classes = ["tile", "tile-" + tile.value, positionClass];
+            //var classes = ["tile", "tile-" + tile.value, positionClass];
 
-            if (tile.value > 2048) classes.push("tile-super");
+            //if (tile.value > 2048) classes.push("tile-super");
+            let classes = this.createClasses(tile);
 
             this.applyClasses(wrapper, classes);
 

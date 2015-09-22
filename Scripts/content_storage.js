@@ -13,6 +13,17 @@ var Store;
             var stateJson = this.storage.getItem(permanentStateKey);
             return stateJson ? JSON.parse(stateJson) : null;
         };
+        ContentStorage.prototype.getCurrentLevel = function () {
+            var statistics = this.getGameStatistic();
+            return (statistics && statistics.level) || 1;
+        };
+        ContentStorage.prototype.saveCurrentLevel = function (newLevel) {
+            Contract.requires(newLevel >= 0, "newLevel should be >= 0, but was " + newLevel);
+            var statistics = this.getGameStatistic();
+            statistics = statistics || { bestScore: 0, level: 1 };
+            statistics.level = newLevel;
+            this.updateGameStatistic(statistics);
+        };
         ContentStorage.prototype.updateGameStatistic = function (state) {
             this.storage.setItem(permanentStateKey, JSON.stringify(state));
         };
@@ -38,8 +49,9 @@ var Store;
         ContentStorage.prototype.updateBestScoreIfNeeded = function (bestScore) {
             Contract.requires(bestScore >= 0, "bestScore should be >= 0, but was " + bestScore);
             // You can read this code as: if (bestScore > (statistics?.bestScore ?? 0) {
-            if (bestScore > this.getBestScore()) {
-                this.updateGameStatistic({ bestScore: bestScore });
+            var permanentState = this.getGameStatistic();
+            if (bestScore > ((permanentState && permanentState.bestScore) || 0)) {
+                this.updateGameStatistic({ bestScore: bestScore, level: (permanentState && permanentState.level) || 1 });
             }
         };
         return ContentStorage;
