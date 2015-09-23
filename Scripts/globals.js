@@ -8,4 +8,7 @@ var defaultStableValue = 2;
 function getRandomTileValue() {
     return Math.random() < 0.9 ? 2 : 4;
 }
+function getLevelTargetTile(level) {
+    return Math.pow(2, level);
+}
 //# sourceMappingURL=globals.js.map

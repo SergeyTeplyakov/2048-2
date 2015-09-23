@@ -11,5 +11,8 @@
 /.vs/
 2048.csproj.user
 web.*
+/Scripts/*.js
 
 /packages/
+/Scripts/typings/
+/style/.sass-cache/

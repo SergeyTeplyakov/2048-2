@@ -61,12 +61,16 @@ module Control {
             // Poor's man pattern matching!
 
             if (event instanceof Keyboard.Move) {
-                // Don't know why, but the cast is required!
-                this.move((<Keyboard.Move>event).direction);
+                if (this.status === GameStatus.KeepPlaying) {
+                    // Don't know why, but the cast is required!
+                    this.move((<Keyboard.Move>event).direction);
+                }
             } else if (event instanceof Keyboard.Restart) {
                 this.restartTheGame();
-            } else if (event instanceof Keyboard.KeepPlaying) {
-                this.keepPlaying();
+            } else if (event instanceof Keyboard.NextLevel) {
+                this.nextLevel();
+            } else if (event instanceof Keyboard.EnterPress) {
+                if (this.won) this.nextLevel();
             }
         }
 
@@ -77,7 +81,6 @@ module Control {
             this.status = GameStatus.KeepPlaying;
 
             let previousState = this.storage.getGameState();
-            let currentLevel = this.storage.getCurrentLevel();
 
             this.grid = new Model.GridController(this.size, previousState && previousState.grid);
 
@@ -87,7 +90,7 @@ module Control {
             let tiles: Tile[] = [];
 
             if (advancedMode) {
-                tiles.push(...this.initAdvancedMode(currentLevel, previousState));
+                tiles.push(...this.initAdvancedMode(this.storage.getCurrentLevel(), previousState));
             } else {
                 tiles.push(...this.initRegularMode(previousState));
             }
@@ -126,7 +129,7 @@ module Control {
 
                 stableTiles.push(...previousState.grid.stableCells);
             } else {
-                let value = Math.pow(2, level); // level 1 -> 2, level 2 -> 4 etc
+                let value = getLevelTargetTile(level); // level 1 -> 2, level 2 -> 4 etc
 
                 tiles.push(...this.grid.addRandomTiles(startTilesCount - stableTilesCount));
                 let stable = this.grid.addRandomStableTiles(stableTilesCount, value);
@@ -135,9 +138,10 @@ module Control {
                 tiles.push(...stable);
             }
 
+            // TODO: design is bad! Timing issue between initAdvancedMode method call and setup method call
             this.advanced = {
                 stableTiles: stableTiles,
-                level: level,
+                level: level
             };
 
             return tiles;
@@ -151,7 +155,8 @@ module Control {
             this.storage.updateBestScoreIfNeeded(this.score);
 
             if (this.advanced && this.status === GameStatus.Victory) {
-                this.advanced.level++;
+                // TODO: level should be increased only when the new game button was pressed
+                //this.advanced.level++;
                 this.storage.saveCurrentLevel(this.advanced.level);
             }
 
@@ -162,7 +167,7 @@ module Control {
                 this.storage.updateGameState(this.computeGameState());
             }
 
-            this.view.updateView(tiles, this.score, this.bestScore, this.status);
+            this.view.updateView(this.advanced.level, tiles, this.score, this.bestScore, this.status);
         }
 
         private get bestScore(): number {
@@ -185,11 +190,14 @@ module Control {
         }
 
         // Keep playing after winning (allows going over 2048)
-        private keepPlaying() {
+        private nextLevel() {
             Contract.assert(this.status !== GameStatus.GameOver, "Can't continue game when the game was over");
 
-            this.status = GameStatus.KeepPlaying;
-            this.view.clearMessage(); // Clear the game won/lost message
+            //this.status = GameStatus.KeepPlaying;
+            //this.view.clearMessage(); // Clear the game won/lost message
+            this.advanced.level++;
+            this.storage.saveCurrentLevel(this.advanced.level);
+            this.restartTheGame();
         }
 
         // Move tiles on the grid in the specified direction

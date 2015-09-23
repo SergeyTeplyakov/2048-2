@@ -2,8 +2,8 @@
 @import "fonts/clear-sans.css";
 
 $grid-row-count: 4;
-
-$tile-size: 100px;
+$h1-font-size: 60px;
+$tile-size: 110px;
 $grid-spacing: 10px;
 $grid-row-size: $tile-size + $grid-spacing;
 
@@ -47,7 +47,7 @@ body {
 }
 
 h1.title {
-  font-size: 60px;
+  font-size: $h1-font-size;
   font-weight: bold;
   margin: 0;
   display: block;
@@ -71,13 +71,18 @@ h1.title {
   text-align: right;
 }
 
-.score-container, .best-container {
-  $height: 25px;
+/*.level {
+    position: relative;
+
+}*/
+
+.level, .score-container, .best-container {
+  $height: 20px;
 
   position: relative;
   display: inline-block;
   background: $game-container-background;
-  padding: 15px 25px;
+  padding: 15px 20px;
   font-size: $height;
   height: $height;
   line-height: $height + 22px;
@@ -111,6 +116,10 @@ h1.title {
     @include animation(move-up 600ms ease-in);
     @include animation-fill-mode(both);
   }
+}
+
+.level:after {
+    content: "Level";
 }
 
 .score-container:after {
@@ -148,7 +157,7 @@ hr {
 }
 
 .container {
-  width: $field-width;
+  width: $field-width;// + 50px;
   margin: 0 auto;
 }
 
@@ -178,6 +187,7 @@ hr {
 @mixin game-field {
   .game-container {
     margin-top: $game-container-margin-top;
+    /*margin-left: 25px;*/
     position: relative;
     padding: $grid-spacing;
 
@@ -218,7 +228,8 @@ hr {
         font-weight: bold;
         height: 60px;
         line-height: 60px;
-        margin-top: 222px;
+        // Weird, but this is actually a margin for entire winning message
+        margin-top: 122px;
         // height: $field-width;
         // line-height: $field-width;
       }
@@ -231,7 +242,7 @@ hr {
       a {
         @include button;
         margin-left: 9px;
-        // margin-top: 59px;
+        margin-top: 50px;
 
 	&.keep-playing-button {
 	  display: none;
@@ -245,7 +256,7 @@ hr {
         background: rgba($tile-gold-color, .5);
         color: $bright-text-color;
 
-	a.keep-playing-button {
+	a.next-level-button {
 	  display: inline-block;
 	}
       }

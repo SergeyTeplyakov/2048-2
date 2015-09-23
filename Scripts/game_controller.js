@@ -34,14 +34,20 @@ var Control;
         GameController.prototype.handleInput = function (event) {
             // Poor's man pattern matching!
             if (event instanceof Keyboard.Move) {
-                // Don't know why, but the cast is required!
-                this.move(event.direction);
+                if (this.status === GameStatus.KeepPlaying) {
+                    // Don't know why, but the cast is required!
+                    this.move(event.direction);
+                }
             }
             else if (event instanceof Keyboard.Restart) {
                 this.restartTheGame();
             }
-            else if (event instanceof Keyboard.KeepPlaying) {
-                this.keepPlaying();
+            else if (event instanceof Keyboard.NextLevel) {
+                this.nextLevel();
+            }
+            else if (event instanceof Keyboard.EnterPress) {
+                if (this.won)
+                    this.nextLevel();
             }
         };
         GameController.prototype.setup = function (advancedMode) {
@@ -50,14 +56,13 @@ var Control;
             this.score = 0;
             this.status = GameStatus.KeepPlaying;
             var previousState = this.storage.getGameState();
-            var currentLevel = this.storage.getCurrentLevel();
             this.grid = new Model.GridController(this.size, previousState && previousState.grid);
             // With advanced mode everything is a bit more complicated.
             // If previous state is empty then the level is 1 and stable value is 2.
             // Otherwise stable value should be increased (multiplied by 2).
             var tiles = [];
             if (advancedMode) {
-                tiles.push.apply(tiles, this.initAdvancedMode(currentLevel, previousState));
+                tiles.push.apply(tiles, this.initAdvancedMode(this.storage.getCurrentLevel(), previousState));
             }
             else {
                 tiles.push.apply(tiles, this.initRegularMode(previousState));
@@ -90,15 +95,16 @@ var Control;
                 stableTiles.push.apply(stableTiles, previousState.grid.stableCells);
             }
             else {
-                var value = Math.pow(2, level); // level 1 -> 2, level 2 -> 4 etc
+                var value = getLevelTargetTile(level); // level 1 -> 2, level 2 -> 4 etc
                 tiles.push.apply(tiles, this.grid.addRandomTiles(startTilesCount - stableTilesCount));
                 var stable = this.grid.addRandomStableTiles(stableTilesCount, value);
                 stableTiles = stable;
                 tiles.push.apply(tiles, stable);
             }
+            // TODO: design is bad! Timing issue between initAdvancedMode method call and setup method call
             this.advanced = {
                 stableTiles: stableTiles,
-                level: level,
+                level: level
             };
             return tiles;
         };
@@ -107,7 +113,8 @@ var Control;
             this.score += Tile.computeScore(tiles);
             this.storage.updateBestScoreIfNeeded(this.score);
             if (this.advanced && this.status === GameStatus.Victory) {
-                this.advanced.level++;
+                // TODO: level should be increased only when the new game button was pressed
+                //this.advanced.level++;
                 this.storage.saveCurrentLevel(this.advanced.level);
             }
             if (this.status === GameStatus.GameOver) {
@@ -117,7 +124,7 @@ var Control;
             else {
                 this.storage.updateGameState(this.computeGameState());
             }
-            this.view.updateView(tiles, this.score, this.bestScore, this.status);
+            this.view.updateView(this.advanced.level, tiles, this.score, this.bestScore, this.status);
         };
         Object.defineProperty(GameController.prototype, "bestScore", {
             get: function () {
@@ -139,10 +146,13 @@ var Control;
             this.setup(this.isAdvanced);
         };
         // Keep playing after winning (allows going over 2048)
-        GameController.prototype.keepPlaying = function () {
+        GameController.prototype.nextLevel = function () {
             Contract.assert(this.status !== GameStatus.GameOver, "Can't continue game when the game was over");
-            this.status = GameStatus.KeepPlaying;
-            this.view.clearMessage(); // Clear the game won/lost message
+            //this.status = GameStatus.KeepPlaying;
+            //this.view.clearMessage(); // Clear the game won/lost message
+            this.advanced.level++;
+            this.storage.saveCurrentLevel(this.advanced.level);
+            this.restartTheGame();
         };
         // Move tiles on the grid in the specified direction
         GameController.prototype.move = function (direction) {

@@ -11,3 +11,7 @@ var defaultStableValue = 2;
 function getRandomTileValue(): number {
     return Math.random() < 0.9 ? 2 : 4;
 }
+
+function getLevelTargetTile(level: number): number {
+    return Math.pow(2, level);
+}

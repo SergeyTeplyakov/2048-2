@@ -4,12 +4,7 @@
         "classList" in document.documentElement) {
         return;
     }
-
-    var prototype = Array.prototype,
-        push = prototype.push,
-        splice = prototype.splice,
-        join = prototype.join;
-
+    var prototype = Array.prototype, push = prototype.push, splice = prototype.splice, join = prototype.join;
     function DOMTokenList(el) {
         this.el = el;
         // The className needs to be trimmed and split on whitespace
@@ -19,10 +14,10 @@
             push.call(this, classes[i]);
         }
     }
-
     DOMTokenList.prototype = {
         add: function (token) {
-            if (this.contains(token)) return;
+            if (this.contains(token))
+                return;
             push.call(this, token);
             this.el.className = this.toString();
         },
@@ -33,9 +28,11 @@
             return this[index] || null;
         },
         remove: function (token) {
-            if (!this.contains(token)) return;
+            if (!this.contains(token))
+                return;
             for (var i = 0; i < this.length; i++) {
-                if (this[i] == token) break;
+                if (this[i] === token)
+                    break;
             }
             splice.call(this, i, 1);
             this.el.className = this.toString();
@@ -46,27 +43,26 @@
         toggle: function (token) {
             if (!this.contains(token)) {
                 this.add(token);
-            } else {
+            }
+            else {
                 this.remove(token);
             }
-
             return this.contains(token);
         }
     };
-
     window.DOMTokenList = DOMTokenList;
-
     function defineElementGetter(obj, prop, getter) {
         if (Object.defineProperty) {
             Object.defineProperty(obj, prop, {
                 get: getter
             });
-        } else {
+        }
+        else {
             obj.__defineGetter__(prop, getter);
         }
     }
-
     defineElementGetter(HTMLElement.prototype, 'classList', function () {
         return new DOMTokenList(this);
     });
 })();
+//# sourceMappingURL=classlist_polyfill.js.map

@@ -24,15 +24,19 @@ module Keyboard {
     // 'R' key restarts the game
     let restartKeyStroke = 82;
 
+    let enterKeyStroke = 13;
+
     export class Move {
         constructor(public direction: Direction) {}
     }
 
-    export class Restart {}
+    export class Restart { }
 
-    export class KeepPlaying {}
+    export class EnterPress {}
 
-    export type InputEvent = Move | Restart | KeepPlaying;
+    export class NextLevel {}
+
+    export type InputEvent = Move | Restart | NextLevel | EnterPress;
 
     export interface KeyboardListener {
         subscribe(handler: (event: InputEvent) => void): void;
@@ -90,14 +94,16 @@ module Keyboard {
                         this.raiseMove(event, direction);
                     } else if (event.which === restartKeyStroke) {
                         this.raiseRestart(event);
+                    } else if (event.which === enterKeyStroke) {
+                        this.raiseEnterPress(event);
                     }
                 }
             });
 
             // Respond to button presses
-            this.bindButtonPress(".retry-button", this.raiseRestart);
             this.bindButtonPress(".restart-button", this.raiseRestart);
-            this.bindButtonPress(".keep-playing-button", this.raiseKeepPlaying);
+            this.bindButtonPress(".next-level-button", this.raiseNextLevel);
+            this.bindButtonPress(".retry-button", this.raiseRestart);
 
             // Respond to swipe events
             var touchStartClientX, touchStartClientY;
@@ -176,8 +182,12 @@ module Keyboard {
             this.raise(event, new Restart());
         }
 
-        private raiseKeepPlaying(event: Event) {
-            this.raise(event, new KeepPlaying());
+        private raiseNextLevel(event: Event) {
+            this.raise(event, new NextLevel());
+        }
+
+        private raiseEnterPress(event: Event) {
+            this.raise(event, new EnterPress());
         }
 
         private bindButtonPress(selector, fn) {

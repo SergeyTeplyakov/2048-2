@@ -23,10 +23,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="index.html" />
-    <Content Include="Scripts\animframe_polyfill.js" />
-    <Content Include="Scripts\application.js" />
-    <Content Include="Scripts\bind_polyfill.js" />
-    <Content Include="Scripts\classlist_polyfill.js" />
+    <TypeScriptCompile Include="Scripts\animframe_polyfill.ts" />
+    <TypeScriptCompile Include="Scripts\application.ts" />
+    <TypeScriptCompile Include="Scripts\bind_polyfill.ts" />
+    <TypeScriptCompile Include="Scripts\classlist_polyfill.ts" />
     <Content Include="style\fonts\clear-sans.css" />
     <Content Include="style\fonts\ClearSans-Bold-webfont.svg" />
     <Content Include="style\fonts\ClearSans-Light-webfont.svg" />

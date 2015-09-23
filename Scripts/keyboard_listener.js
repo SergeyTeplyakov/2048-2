@@ -18,6 +18,7 @@ var Keyboard;
     };
     // 'R' key restarts the game
     var restartKeyStroke = 82;
+    var enterKeyStroke = 13;
     var Move = (function () {
         function Move(direction) {
             this.direction = direction;
@@ -31,12 +32,18 @@ var Keyboard;
         return Restart;
     })();
     Keyboard.Restart = Restart;
-    var KeepPlaying = (function () {
-        function KeepPlaying() {
+    var EnterPress = (function () {
+        function EnterPress() {
         }
-        return KeepPlaying;
+        return EnterPress;
     })();
-    Keyboard.KeepPlaying = KeepPlaying;
+    Keyboard.EnterPress = EnterPress;
+    var NextLevel = (function () {
+        function NextLevel() {
+        }
+        return NextLevel;
+    })();
+    Keyboard.NextLevel = NextLevel;
     function createKeyboard() {
         return new KeyboardListenerImpl();
     }
@@ -77,12 +84,15 @@ var Keyboard;
                     else if (event.which === restartKeyStroke) {
                         _this.raiseRestart(event);
                     }
+                    else if (event.which === enterKeyStroke) {
+                        _this.raiseEnterPress(event);
+                    }
                 }
             });
             // Respond to button presses
-            this.bindButtonPress(".retry-button", this.raiseRestart);
             this.bindButtonPress(".restart-button", this.raiseRestart);
-            this.bindButtonPress(".keep-playing-button", this.raiseKeepPlaying);
+            this.bindButtonPress(".next-level-button", this.raiseNextLevel);
+            this.bindButtonPress(".retry-button", this.raiseRestart);
             // Respond to swipe events
             var touchStartClientX, touchStartClientY;
             var gameContainer = document.getElementsByClassName("game-container")[0];
@@ -147,8 +157,11 @@ var Keyboard;
         KeyboardListenerImpl.prototype.raiseRestart = function (event) {
             this.raise(event, new Restart());
         };
-        KeyboardListenerImpl.prototype.raiseKeepPlaying = function (event) {
-            this.raise(event, new KeepPlaying());
+        KeyboardListenerImpl.prototype.raiseNextLevel = function (event) {
+            this.raise(event, new NextLevel());
+        };
+        KeyboardListenerImpl.prototype.raiseEnterPress = function (event) {
+            this.raise(event, new EnterPress());
         };
         KeyboardListenerImpl.prototype.bindButtonPress = function (selector, fn) {
             var button = document.querySelector(selector);

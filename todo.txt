@@ -1,2 +1,15 @@
 ﻿1. Add grunt support
 2. Merge and minify declarations
+
+3. Do not reset score when level is complete (now, no needed! Because in this case I need to save score at the beginnig of each level)
+4. add Level div with current level.
+5. add reset button that will reset current level (ask user about it!).
+6. change keep going to 'new level' i.e. no keep going any more after victory!
+
+7. change 'join the number and get to 2048 tile' to : 'Now you have a goal! Merge <b>stable tile</b>!'
+add this into section how to play.
+And at the second line: Level 1: join the number with with 'xxx' tile!
+8. Add enter to 'new level' when game is won
+9. Move 'you win' message a bit to the top
+
+10. migrate remating js files

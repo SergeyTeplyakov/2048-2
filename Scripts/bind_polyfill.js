@@ -1,9 +1,10 @@
 Function.prototype.bind = Function.prototype.bind || function (target) {
-    var self = this;
+    var _this = this;
     return function (args) {
         if (!(args instanceof Array)) {
             args = [args];
         }
-        self.apply(target, args);
+        _this.apply(target, args);
     };
 };
+//# sourceMappingURL=bind_polyfill.js.map
