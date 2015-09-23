@@ -1,5 +1,5 @@
 ﻿// TODO: make all files consistent: utils.ts?
-module Utils {
+module Helpers {
 
     export function forEach<T>(array: T[][], callback: (x, y, t: T) => void) {
         let length = array.length;

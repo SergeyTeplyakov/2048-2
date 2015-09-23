@@ -1,5 +1,5 @@
 /// <reference path="state.ts"/>
-/// <reference path="Utils.ts"/>
+/// <reference path="helpers.ts"/>
 /// <reference path="contract.ts"/>
 
 module Model {
@@ -127,7 +127,7 @@ module Model {
 
             let stateCells: Array<Tile> = [];
 
-            Utils.forEach(newGridState, (x, y, tile) => {
+            Helpers.forEach(newGridState, (x, y, tile) => {
                 Contract.assert(notNull(tile), 'All tiles in grid state should not be null or undefined');
                 
                 if (notNull(tile.value) && tile.type !== TileType.Empty) {
@@ -297,7 +297,7 @@ module Model {
 
             let newGridState: Tile[][] = this.doMove(direction);
 
-            Utils.forEach(newGridState, (x, y, tile) => {
+            Helpers.forEach(newGridState, (x, y, tile) => {
                 Contract.assert(notNull(tile), 'All tiles in grid state should not be null or undefined');
 
                 if (tile.value && tile.type === TileType.Merged) {

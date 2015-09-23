@@ -1,5 +1,5 @@
 /// <reference path="state.ts"/>
-/// <reference path="Utils.ts"/>
+/// <reference path="helpers.ts"/>
 /// <reference path="contract.ts"/>
 var Model;
 (function (Model) {
@@ -92,7 +92,7 @@ var Model;
             // For grids with 4x4 this doesn't matter at all!
             var newGridState = this.doMove(direction);
             var stateCells = [];
-            Utils.forEach(newGridState, function (x, y, tile) {
+            Helpers.forEach(newGridState, function (x, y, tile) {
                 Contract.assert(notNull(tile), 'All tiles in grid state should not be null or undefined');
                 if (notNull(tile.value) && tile.type !== TileType.Empty) {
                     stateCells.push(tile);
@@ -224,7 +224,7 @@ var Model;
         Grid.prototype.tryMove = function (direction) {
             var stateCells = [];
             var newGridState = this.doMove(direction);
-            Utils.forEach(newGridState, function (x, y, tile) {
+            Helpers.forEach(newGridState, function (x, y, tile) {
                 Contract.assert(notNull(tile), 'All tiles in grid state should not be null or undefined');
                 if (tile.value && tile.type === TileType.Merged) {
                     stateCells.push(tile);

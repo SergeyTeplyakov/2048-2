@@ -23,10 +23,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="index.html" />
-    <TypeScriptCompile Include="Scripts\animframe_polyfill.ts" />
     <TypeScriptCompile Include="Scripts\application.ts" />
-    <TypeScriptCompile Include="Scripts\bind_polyfill.ts" />
-    <TypeScriptCompile Include="Scripts\classlist_polyfill.ts" />
+    <Content Include="Scripts\animframe_polyfill.js" />
+    <Content Include="Scripts\application.js" />
+    <Content Include="Scripts\bind_polyfill.js" />
+    <Content Include="Scripts\classlist_polyfill.js" />
     <Content Include="style\fonts\clear-sans.css" />
     <Content Include="style\fonts\ClearSans-Bold-webfont.svg" />
     <Content Include="style\fonts\ClearSans-Light-webfont.svg" />
@@ -42,7 +43,7 @@
     <TypeScriptCompile Include="Scripts\keyboard_listener.ts" />
     <TypeScriptCompile Include="Scripts\state.ts" />
     <TypeScriptCompile Include="Scripts\typings\qunit\qunit.d.ts" />
-    <TypeScriptCompile Include="Scripts\Utils.ts" />
+    <TypeScriptCompile Include="Scripts\helpers.ts" />
     <TypeScriptCompile Include="Tests\grid_Tests.ts" />
     <TypeScriptCompile Include="Tests\content_storage_Tests.ts" />
   </ItemGroup>
